@@ -1,0 +1,12 @@
+---
+# - name: check database exists
+#   command: >
+#     mysql --user=root --password=root --batch --execute="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{{ site_domain }}'"
+#   register: query_result
+
+# - name: setup database
+#   shell: mysql --user=root --password=1234567890 < {{ item }}
+#   with_items:
+#     - "{{ site_webroot_path }}/script/env_config/provision/ansible/db_migration/001_create_db.sql"
+#     - "{{ site_webroot_path }}/script/env_config/provision/ansible/db_migration/002_create_data.sql"
+#   when: query_result.stdout == ""

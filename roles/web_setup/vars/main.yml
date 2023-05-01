@@ -1,0 +1,7 @@
+---
+# vars file for common
+site_domain: "tuanitf"
+dev_site_domain: "{{ site_domain }}"
+site_base_path: "/var/web/{{ site_domain }}"
+site_webroot_path: "{{ site_base_path }}/prod"
+dev_site_webroot_path: "{{ site_base_path }}/dev"

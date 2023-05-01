@@ -1,0 +1,26 @@
+---
+- name: config yum repo to install php 7.4
+  command: yum-config-manager --enable remi-php74
+- name: install web required packages
+  yum: name={{ item }} state=present
+  loop: ['php', 'php-fpm', 'php-common', 'php-pear', 'php-devel', 'php-cli', 'php-mcrypt', 
+  'php-gd', 'php-curl', 'php-mysqlnd', 'php-mysql', 'php-zip', 'php-pecl-zip', 'php-fileinfo', 'php-mbstring', 'php-xml', 'php-redis', 'php-imap']
+- name: copy needed configuration file
+  copy:
+    src: "files/php.ini"
+    dest: "/etc/"
+    owner: root
+    group: root
+    mode: 0755
+- name: Enable php-fpm service for automatic start
+  service:
+    name: "php-fpm"
+    state: started
+    enabled: yes
+- name: create php config page
+  template:
+    src: 'files/phpinfo.php'
+    dest: '/usr/share/nginx/html/phpinfo.php'
+    owner: nginx
+    group: nginx
+    mode: 0755

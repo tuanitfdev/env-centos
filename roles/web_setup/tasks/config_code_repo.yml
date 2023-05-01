@@ -1,0 +1,71 @@
+---
+###B if use code bitbucket repo (or other), could use this command to restore ssh private of repo to reuse it
+- name: copy ssh pkey file
+  copy:
+    src: 'files/ssh/id_rsa_bb_np'
+    dest: "{{ site_base_path }}/"
+    owner: root
+    group: root
+    mode: 0400
+###E
+
+###B Just use to refer file command
+# - name: "ensure {{ site_webroot_path }} directory exists"
+#   file:
+#     path: "{{ site_webroot_path }}/"    
+#     recurse: yes
+#     state: directory
+#     owner: root
+#     group: root
+#     mode: 0755
+###E
+
+- name: "ensure {{ site_webroot_path }} directory exists"
+  shell: "mkdir -p /var/web/tuanitf/"
+  become: true
+
+###B Use these 2 commands to add trusted host repo to local sshd server
+- name: ensure /etc/ssh directory exists
+  file: >
+    path=/etc/ssh/
+    recurse=yes
+    state=directory
+
+- name: add bitbucket host to trusted ssh host
+  shell: ssh-keyscan -p 443 -H altssh.bitbucket.org >> /etc/ssh/ssh_known_hosts
+  become: true
+
+- name: copy ssh config file
+  file:
+    src: 'files/ssh/config'
+    dest: '/etc/ssh/ssh_config'
+###E
+
+###B Add ssh_config which had bitbucket connnection string to server
+- name: copy ssh configuration file
+  template:
+    src: 'templates/ssh_config.j2'
+    dest: "/etc/ssh/ssh_config"
+    owner: root
+    group: root
+    mode: 0755
+###E
+
+###B
+# - stat: path="{{ site_webroot_path }}/.git"
+#   register: check_source
+
+# - name: get web source code
+#   git:
+#     repo: 'git@bitbucket.org:tuancnttsp/hq-imei-lookup-src.git'
+#     dest: "{{ site_webroot_path }}/"
+#     accept_hostkey: yes
+#   when: check_source.stat.exists == False
+###E
+
+###B Use to sync folders have a lot of files with fastest speed
+# - name: Synchronization web folder to make dev web folder for testing
+#   synchronize:
+#     src: "{{ site_webroot_path }}/"
+#     dest: "{{ dev_site_webroot_path }}/"
+###E

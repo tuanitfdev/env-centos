@@ -1,0 +1,54 @@
+---
+- hostname:
+    name: "{{ hostname }}"
+- name: update yum cache
+  command: yum makecache
+- name: install neccessary packages
+  yum: 
+    name:
+      # - epel-release
+      - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+      - tmux
+      # - ntfs-3g
+      - vim
+      - wget
+      - net-tools
+      - yum-utils
+    state: present    
+- name: config bashrc for all users
+  template:
+    src: 'templates/bash.bashrc.j2'
+    dest: '/etc/bash.bashrc'
+    owner: root
+    group: root
+    mode: 0644
+# - name: ensure /etc/vim directory exists
+#   file: >
+#     path=/etc/vim
+#     recurse=yes
+#     state=directory
+# - name: config vim for all users
+#   template:
+#     src: 'templates/vimrc.j2'
+#     dest: '/etc/vimrc'
+#     owner: root
+#     group: root
+#     mode: 0644
+- name: config sshd
+  template:
+      src: 'templates/sshd_config.j2'
+      dest: '/etc/ssh/sshd_config'
+      owner: root
+      group: root
+      mode: 0644  
+  notify:
+  - restart sshd
+- name: Disable selinux config 1
+  selinux: state=disabled
+- name: Disable selinux config 2
+  selinux: >
+    conf=/etc/sysconfig/selinux
+    state=disabled
+  notify:
+  - reboot

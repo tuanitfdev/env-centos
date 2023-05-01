@@ -1,0 +1,23 @@
+---
+- import_tasks: web_server.yml
+- import_tasks: security.yml
+# - import_tasks: config_code_repo.yml
+
+###B Use composer to install package
+# - name: composer install dependencies
+#   shell: "su - root -c 'cd {{ site_webroot_path }}/ && composer install'"
+#   args:    
+#     creates: "{{ site_webroot_path }}/vendor/autoload.php"
+#     executable: /bin/bash
+#   become: true
+#   ignore_errors: yes
+#   run_once: true
+###E
+
+# - name: create test php config page
+#   template:
+#     src: 'files/phpinfo.php'
+#     dest: '/home/hq-imei.local/public_html/index.php'
+#     owner: nginx
+#     group: nginx
+#     mode: 0755

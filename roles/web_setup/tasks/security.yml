@@ -1,0 +1,15 @@
+---
+- name: start firewalld service
+  service: 
+    name: firewalld
+    state: started
+- name: configure open ports with firewalld
+  firewalld:
+    state: "{{ item.state }}"
+    port: "{{ item.port }}"
+    zone: public
+    immediate: yes
+    permanent: yes
+  loop:
+    - { state: 'enabled', port: "{{ ssh_port }}/tcp" }
+    - { state: 'enabled', port: "{{ http_port }}/tcp" }

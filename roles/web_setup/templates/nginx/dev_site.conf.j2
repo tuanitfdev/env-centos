@@ -1,0 +1,73 @@
+server {
+	    server_name www.{{ dev_site_domain }};
+	    rewrite ^(.*) http://{{ dev_site_domain }}$1 permanent;
+    	}
+server {
+	    listen   80;
+    	access_log off;
+    	# access_log   {{ site_base_path }}/logs/dev_access.log;
+    	error_log off;
+    	# error_log {{ site_base_path }}/logs/dev_error.log;	
+    	add_header X-Frame-Options SAMEORIGIN;
+		add_header X-Content-Type-Options nosniff;
+		add_header X-XSS-Protection "1; mode=block";
+		root {{ dev_site_webroot_path }};
+		#include /etc/nginx/conf/ddos2.conf;
+	 	index index.php index.html index.htm;
+ 		server_name {{ dev_site_domain }};
+
+#///////////////////////////////////////////////////////
+# Ban chi co the chon 1 trong 4 rule AAA, BBB, CCC, DDD hoac EEE
+# Ban nen comment cac rule khong su dung thay vi xoa chung vi neu ban su dung wordpress blog 
+# Cac dong nay can thiet cho cac chuc nang trong Wordpress Blog Tools cua VPSSIM
+# Thuat ngu:
+# Comment - Them dau # vao truoc
+# Uncomment - Bo dau # o truoc cau.
+#///////////////////////////////////////////////////////
+
+
+#Chay tat ca cac website (Wordpress, Xenforo, Joomla, Phpbb .... ). neu ban su dung rule cua ban,comment dong duoi (them dau # vao truoc) (AAA)
+include /etc/nginx/conf/all.conf;
+
+# Config Cache Static Files
+include /etc/nginx/conf/staticfiles.conf;  
+
+#Tang bao mat security, chong sql injection  ....(uncoment neu ban muon su dung). Boi vi mot so code website khong su dung duoc voi rule nay, nen mac dinh VPSSIM de tat.
+#Khong duoc xoa dong duoi, neu xoa VPSSIM se khong hoat dong !
+#include /etc/nginx/conf/block.conf;
+
+# Error Page
+#error_page 403 /errorpage_html/403.html;
+#error_page 404 /errorpage_html/404.html;
+#error_page 405 /errorpage_html/405.html;
+#error_page 502 /errorpage_html/502.html;
+#error_page 503 /errorpage_html/503.html;
+#error_page 504 /errorpage_html/504.html;
+#location ^~ /errorpage_html/ {
+#   internal;
+#    root /home/hq-imei.local;
+#    access_log              off;
+#}
+
+		include /etc/nginx/conf/fastcgi.conf;
+		
+#    	location ~ \.php$ {
+#		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+#        	include /etc/nginx/fastcgi_params;
+#        	fastcgi_pass 127.0.0.1:9000;
+#        	fastcgi_index index.php;
+#		fastcgi_connect_timeout 250;
+#		fastcgi_send_timeout 250;
+#		fastcgi_read_timeout 250;
+#		fastcgi_buffer_size 256k;
+#		fastcgi_buffers 4 256k;
+#		fastcgi_busy_buffers_size 256k;
+#		fastcgi_temp_file_write_size 256k;
+#		fastcgi_intercept_errors on;
+ #       	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+ #   	}
+
+#include /etc/nginx/conf/phpstatus.conf;
+include /etc/nginx/conf/drop.conf;
+
+    }

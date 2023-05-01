@@ -1,0 +1,36 @@
+---
+- name: create web folder for nginx using
+  file:
+    path: "{{ site_webroot_path }}"
+    owner: nginx
+    group: nginx
+    state: directory
+    mode: 0777
+    recurse: yes
+
+# - name: config production website virtualhost
+#   template:
+#     src: 'templates/nginx/prod_site.conf.j2'
+#     dest: "/etc/nginx/sites-available/{{ site_domain }}.conf"
+#     owner: root
+#     group: root
+#     mode: 0644
+
+- name: config development website virtualhost
+  template:
+    src: 'templates/nginx/dev_site.conf.j2'
+    dest: "/etc/nginx/sites-available/{{ dev_site_domain }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable site
+  file:
+    src: "/etc/nginx/sites-available/{{ item }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item }}.conf"
+    state: link
+  loop:
+    # - "{{ site_domain }}"
+    - "{{ dev_site_domain }}"
+  notify:
+    - restart nginx

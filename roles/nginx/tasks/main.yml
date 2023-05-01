@@ -1,0 +1,30 @@
+---
+- name: config yum repo to install php 7.4
+  command: yum-config-manager --enable remi-php74
+- name: install web required packages
+  yum: name=nginx state=present
+- name: copy some needed configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - { src: 'files/conf', dest: '/etc/nginx/' }
+    - { src: 'files/nginx.conf', dest: '/etc/nginx/' }
+- name: ensure /etc/nginx/sites-available/ directory exists
+  file: >
+    path=/etc/nginx/sites-available/
+    recurse=yes
+    state=directory
+- name: ensure /etc/nginx/sites-enabled/ directory exists
+  file: >
+    path=/etc/nginx/sites-enabled/
+    recurse=yes
+    state=directory
+- name: Enable nginx service for automatic start
+  service:
+    name: "nginx"    
+    state: started
+    enabled: yes

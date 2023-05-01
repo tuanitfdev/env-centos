@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - common
+    # - nginx
+    # - php
+    # - geerlingguy.mysql
+    # - geerlingguy.git
+    # - geerlingguy.composer
+    # - geerlingguy.nodejs
+    # - web_setup

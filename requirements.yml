@@ -1,0 +1,8 @@
+---
+- src: geerlingguy.git
+
+- src: geerlingguy.composer
+
+- src: geerlingguy.mysql
+
+- src: geerlingguy.nodejs

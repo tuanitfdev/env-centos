@@ -1,0 +1,8 @@
+---
+# vars file for common
+mariadb_root_password: root
+hostname: mmws-pc
+# mysql_databases:
+#   - name: hq_imei_lookup
+#     encoding: utf8
+#     collation: utf8_general_ci
